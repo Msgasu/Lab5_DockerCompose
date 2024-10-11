@@ -1,7 +1,7 @@
 version: '3'
 services:
   web:
-    build: .
+    build: ./flask_app  
     ports:
       - "5000:5000"
     depends_on:
@@ -27,7 +27,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data  # Persist PostgreSQL data
+      - pgdata:/var/lib/postgresql/data 
+      - ./flask_app/init.sql:/docker-entrypoint-initdb.d/init.sql  
 
 volumes:
   pgdata:
