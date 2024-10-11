@@ -1,16 +1,33 @@
-version: "3.8"
-
+version: '3'
 services:
-    web:
-        build: ./flask_app
-        ports:
-            - "5000:5000"
-        environment:
-            - REDIS_URL=redis://redis:6379
-        depends_on:
-            - redis
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+      - db
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=flaskdb
+      - POSTGRES_USER=flaskuser
+      - POSTGRES_PASSWORD=flaskpass
 
-    redis:
-        image: "redis:alpine"
-        ports:
-            - "6379:6379"
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+
+  db:
+    image: "postgres:13"
+    environment:
+      POSTGRES_DB: flaskdb
+      POSTGRES_USER: flaskuser
+      POSTGRES_PASSWORD: flaskpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data  # Persist PostgreSQL data
+
+volumes:
+  pgdata:
